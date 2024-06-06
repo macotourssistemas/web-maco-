@@ -31,34 +31,51 @@
   <!-- Template Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
 
+  <style>
+    .whatsapp-button {
+      position: fixed;
+      top: 90%;
+      right: 50px;
+      transform: translateY(-50%);
+      z-index: 9999;
+      background-color: #25D366;
+      color: #fff;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: all 0.3s ease-in-out;
+    }
 
+    .whatsapp-button:hover {
+      background-color: #128C7E;
+      /* Cambia el color al pasar el ratón sobre el botón */
+    }
 
-
-  <!-- <style>
-    .oval-img {
-  border-radius: 79%; 
-} -->
   </style>
 </head>
 
 <body>
-
+  <a href="https://api.whatsapp.com/send?phone=3045946776" target="_blank" class="whatsapp-button">
+    <i class="fab fa-whatsapp"></i> ¡Chatea por WhatsApp!
+  </a>
   <!-- ======= Header ======= -->
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center" style="padding-top: 50px;">
-        <img src="assets/img/Logo.jpeg" class="img-fluid oval-img" alt="" style="transform: scale(3.5);">
+      <a href="index.html" class="logo d-flex align-items-center">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="assets/img/logo.png" alt=""> -->
+        <h1>Transportes Especiales Maco Tours S.A.S</h1>
       </a>
-
       <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
       <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a href="index.html" class="active">Inicio</a></li>
-          <li><a href="about.html">Nosotros</a></li>
-          <li><a href="services.html">Servicios</a></li>
-          <li><a href="contact.html">Contact</a></li>
+          <li><a href="index.html" class="active" style="font-size: 1.2em; font-weight: bold;">Inicio</a></li>
+          <li><a href="nosotros.html" style="font-size: 1.2em; font-weight: bold;">Nosotros</a></li>
+          <li><a href="servicios.html" style="font-size: 1.2em; font-weight: bold;">Servicios</a></li>
+          <li><a href="contacto.html" style="font-size: 1.2em; font-weight: bold;">Contáctanos</a></li>
         </ul>
       </nav><!-- .navbar -->
 
@@ -71,51 +88,7 @@
     <div class="container">
       <div class="row gy-4 d-flex justify-content-between">
         <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
-          <!-- <h2 data-aos="fade-up">Your Lightning Fast Delivery Partner</h2>
-          <p data-aos="fade-up" data-aos-delay="100">Facere distinctio molestiae nisi fugit tenetur repellat non praesentium nesciunt optio quis sit odio nemo quisquam. eius quos reiciendis eum vel eum voluptatem eum maiores eaque id optio ullam occaecati odio est possimus vel reprehenderit</p> -->
-
-          <!-- <form action="#" class="form-search d-flex align-items-stretch mb-3" data-aos="fade-up" data-aos-delay="200">
-            <input type="text" class="form-control" placeholder="ZIP code or CitY">
-            <button type="submit" class="btn btn-primary">Search</button>
-          </form> -->
-
-          <!-- <div class="row gy-4" data-aos="fade-up" data-aos-delay="400">
-
-            <div class="col-lg-3 col-6">
-              <div class="stats-item text-center w-100 h-100">
-                <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter"></span>
-                <p>Clients</p>
-              </div>
-            </div>
-
-            <div class="col-lg-3 col-6">
-              <div class="stats-item text-center w-100 h-100">
-                <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
-                <p>Projects</p>
-              </div>
-            </div>
-
-            <div class="col-lg-3 col-6">
-              <div class="stats-item text-center w-100 h-100">
-                <span data-purecounter-start="0" data-purecounter-end="1453" data-purecounter-duration="1" class="purecounter"></span>
-                <p>Support</p>
-              </div>
-            </div>
-
-            <div class="col-lg-3 col-6">
-              <div class="stats-item text-center w-100 h-100">
-                <span data-purecounter-start="0" data-purecounter-end="32" data-purecounter-duration="1" class="purecounter"></span>
-                <p>Workers</p>
-              </div>
-            </div>
-
-          </div> -->
         </div>
-
-        <!-- <div class="col-lg-5 order-1 order-lg-2 hero-img" data-aos="zoom-out">
-          <img src="assets/img/hero-img.svg" class="img-fluid mb-3 mb-lg-0" alt="">
-        </div> -->
-
       </div>
     </div>
   </section>
@@ -128,16 +101,15 @@
       <div class="container">
 
         <div class="row gy-4">
-
           <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up">
             <div class="icon flex-shrink-0"><i class="fa-solid fa-road"></i></div>
             <div>
               <h4 class="title">Experiencia y trayectoria</h4>
-              <p class="description">
+              <p style="text-align: justify;" class="description">
                 Maco Tours cuenta con una rica trayectoria y experiencia en el transporte público, destacándose por
                 afrontar proyectos desafiantes con éxito.
               </p>
-              <a href="service-details.html" class="readmore stretched-link"><span>Saber Mas...</span>
+              <a href="nuestro_equipo.html" class="readmore stretched-link"><span>Saber Mas...</span>
                 <i class="fa-regular fa-circle-check"></i></a>
             </div>
           </div>
@@ -147,12 +119,12 @@
             <div class="icon flex-shrink-0"><i class="fa-solid fa-bus"></i></div>
             <div>
               <h4 class="title">Personal altamente calificado</h4>
-              <p class="description">
+              <p style="text-align: justify;" class="description">
                 Nuestro equipo altamente calificado y comprometido garantiza operaciones eficientes y profesionales en
                 cada viaje.
               </p>
-              <a href="service-details.html" class="readmore stretched-link"><span>Saber Mas...</span>
-                 <i class="fa-regular fa-circle-check"></i></a>
+              <a href="nuestro_equipo.html" class="readmore stretched-link"><span>Saber Mas...</span>
+                <i class="fa-regular fa-circle-check"></i></a>
             </div>
           </div><!-- End Service Item -->
 
@@ -161,12 +133,12 @@
 
             <div>
               <h4 class="title">Servicios adaptados y personalizados</h4>
-              <p class="description">
+              <p style="text-align: justify;" class="description">
                 Maco Tours se destaca por comprender las necesidades específicas de sus clientes y ofrecer
-                    soluciones de transporte adaptadas a sus requisitos individuales.
+                soluciones de transporte adaptadas a sus requisitos individuales.
               </p>
-              <a href="service-details.html" class="readmore stretched-link"><span>Saber Mas...</span><i
-                  class="fa-regular fa-circle-check"></i></a>  
+              <a href="nuestro_equipo.html" class="readmore stretched-link"><span>Saber Mas...</span><i
+                  class="fa-regular fa-circle-check"></i></a>
             </div>
           </div><!-- End Service Item -->
 
@@ -182,13 +154,13 @@
         <div class="row gy-4">
           <div class="col-lg-6 position-relative align-self-start order-lg-last order-first">
             <img src="assets/img/Antioquia06.jpeg" class="img-fluid" alt="">
-            <a href="https://www.youtube.com/watch?v=LXb3EKWsInQ" class="glightbox play-btn"></a>
+            <a href="https://youtu.be/odbA1Sz1sCE" class="glightbox play-btn"></a>
           </div>
           <div class="col-lg-6 content order-last  order-lg-first">
             <h3>Nosotros</h3>
             <p style="text-align: justify;">
               Bienvenido a Transportes Especiales Maco Tours SAS, la principal opción en transporte público
-              especializado en Colombia. Nos especializamos en llevar soluciones de movilidad a áreas de difícil acceso,
+              especiales en Colombia. Nos especializamos en llevar soluciones de movilidad a áreas de difícil acceso,
               brindando un servicio confiable y seguro en todo el territorio nacional.
 
               Nuestro éxito radica en nuestro equipo altamente calificado y comprometido, cuyo enfoque principal es
@@ -229,8 +201,9 @@
               <div class="card-img">
                 <img src="assets/img/Guajira05.jpeg" alt="" class="img-fluid">
               </div>
-              <h3><a href="service-details.html" class="stretched-link">Transporte Empresarial</a></h3>
-              <p>Este servicio consiste en transportar personal empresarial, tanto de planta, de
+              <h3><a href="servicio_empresarial.html" class="stretched-link">Transporte Empresarial</a></h3>
+              <p style="text-align: justify;">Este servicio consiste en transportar personal empresarial, tanto de
+                planta, de
                 turnos y administrativos como directivos. También incluye el traslado de personal sin horario definido
                 para su desplazamiento. Transportes Especiales Maco Tours S.A.S pone a disposición de su empresa una
                 variedad de vehículos modernos, que les permite satisfacer las necesidades de transporte del personal
@@ -242,10 +215,11 @@
           <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
             <div class="card">
               <div class="card-img">
-                <img src="assets/img/ssss.png" alt="" class="img-fluid">
+                <img src="assets/img/turistico_0.jpg" alt="" class="img-fluid">
               </div>
-              <h3><a href="service-details.html" class="stretched-link">Transporte Escolar</a></h3>
-              <p>Contamos con un parque automotor moderno, cómodo, seguro y confiable para ofrecer
+              <h3><a href="servicio_escolar.html" class="stretched-link">Transporte Escolar</a></h3>
+              <p style="text-align: justify;">Contamos con un parque automotor moderno, cómodo, seguro y confiable para
+                ofrecer
                 el mejor servicio de desplazamiento dentro del territorio nacional, en viajes familiares y recreativos.
                 En Transportes Especiales Maco Tours S.A.S contamos con vehículos de última generación, que garantiza un
                 excelente confort con todos los requerimientos que para que disfrutes tu viaje, nuestros vehículos están
@@ -259,8 +233,9 @@
               <div class="card-img">
                 <img src="assets/img/Antioquia14.jpeg" alt="" class="img-fluid">
               </div>
-              <h3><a href="service-details.html" class="stretched-link">Turistico</a></h3>
-              <p>Contamos con un parque automotor moderno, cómodo, seguro y confiable para ofrecer
+              <h3><a href="servicio_turistico.html" class="stretched-link">Turistico</a></h3>
+              <p style="text-align: justify;">Contamos con un parque automotor moderno, cómodo, seguro y confiable para
+                ofrecer
                 el mejor servicio de desplazamiento dentro del territorio nacional, en viajes familiares y recreativos.
                 En Transportes Especiales Maco Tours S.A.S contamos con vehículos de última generación, que garantiza un
                 excelente confort con todos los requerimientos que para que disfrutes tu viaje, nuestros vehículos están
@@ -273,6 +248,219 @@
       </div>
     </section><!-- End Services Section -->
 
+    <section id="faq" class="faq"></section>
+    <div class="section-header">
+      <span></span>
+      <h2>Nuestros Clientes</h2>
+
+    </div>
+    <div class="container" data-aos="fade-up">
+      <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="200">
+        <div class="col-lg-12">
+          <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+              <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+              <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+              <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+              <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+              <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+            </ol>
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/1_bureau_veritas.png" alt="First slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/1_cajamag.png" alt="Second slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/1_cemex.png" alt="Third slide">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/1_construmet.png" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/1_crj.jpg" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/1_dv.png" alt="Third slide">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/1_ingenieria-y-vias-sas.png" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/1_intra.jpeg" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/1_J.E.-Jaimes-Ingenieros.png" alt="Third slide">
+                  </div>
+                </div>
+              </div>
+              <div class="carousel-item ">
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/2_agitenco.png" alt="First slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/2_camargo.png" alt="Second slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/2_compass.png" alt="Third slide">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/2_confaguajira.png" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/2_lsgingenieros.png" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/2_masy energy.png" alt="Third slide">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/2_msa engergy.jpg" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/2_oncor.png" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/2_tecnofuegosas_logo.jpg" alt="Third slide">
+                  </div>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/3_af_services.png" alt="First slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/3_c& f_construciones.jpg" alt="Second slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/3_CM-SERVICES-LOGO.png" alt="Third slide">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/3_con y con.png" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/3_construtora_ariguani.png" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/3_edemsa.jpg" alt="Third slide">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/3_rpc.jpeg" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/3_rti.png" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/3_san martin.png" alt="Third slide">
+                  </div>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/4_CONFIPETROL LOGO.png" alt="First slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/4_consulting.png" alt="Second slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/4_ELEC_Home-1.png" alt="Third slide">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/4_elecor.jpg" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/4_fertecnica.png" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/4_geo_imgeneria.jpg" alt="Third slide">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/4_hepta.png" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/4_hl_ingnieros.jpg" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/4_ingecol.png" alt="Third slide">
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="carousel-item">
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/5_jc.png" alt="First slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/5_lince_ingenieria.png" alt="Second slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/5_Logo_Grupo.png" alt="Third slide">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/5_petroworks.jpg" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/5_proing sa.png" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/5_serpel.jpg" alt="Third slide">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/5_servicol.png" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/5_solar.png" alt="Third slide">
+                  </div>
+                  <div class="col-md-4">
+                    <img class="d-block w-50" src="assets/img/clientes/5_tecnitanques.jpg" alt="Third slide">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Anterior</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Siguiente</span>
+            </a>
+          </div>
+
+
+        </div>
+
+      </div>
+    </div>
+    </section><!-- End Our Team Section -->
     <!-- ======= Sección de Llamada a la Acción ======= -->
     <section id="call-to-action" class="call-to-action">
       <div class="container" data-aos="zoom-out">
@@ -280,9 +468,10 @@
         <div class="row justify-content-center">
           <div class="col-lg-8 text-center">
             <h3>Llamada a la Acción</h3>
-            <p>¡Descubre cómo Transportes Especiales Maco Tours SAS puede facilitar tus desplazamientos con seguridad,
+            <p style="text-align: justify;">¡Descubre cómo Transportes Especiales Maco Tours SAS puede facilitar tus
+              desplazamientos con seguridad,
               confiabilidad y un servicio de calidad excepcional!</p>
-            <a class="cta-btn" href="#">Contacta con Nosotros</a>
+            <a class="cta-btn" href="contacto.html">Contacta con Nosotros</a>
           </div>
         </div>
 
@@ -290,59 +479,67 @@
     </section><!-- Fin de la Sección de Llamada a la Acción -->
 
 
-<!-- ======= Features Section ======= -->
-<section id="features" class="features">
+    <!-- ======= Features Section ======= -->
+    <section id="features" class="features">
 
-  <div class="container" data-aos="fade-up">
+      <div class="container" data-aos="fade-up">
 
-    <div class="section-title">
-      <h2>Beneficios de Maco Tours para sus clientes</h2>
-    </div>
+        <div class="section-title">
+          <h2>Beneficios de Maco Tours para sus clientes</h2>
+        </div>
 
-    <div class="row gy-4 align-items-center features-item" data-aos="fade-up">
+        <div class="row gy-4 align-items-center features-item" data-aos="fade-up">
 
-      <div class="col-md-5">
-        <img src="assets/img/features-1.jpg" class="img-fluid" alt="">
+          <div class="col-md-5">
+            <img src="assets/img/features-1.jpg" class="img-fluid" alt="">
+          </div>
+          <div class="col-md-7">
+            <h3>Acceso a áreas de difícil acceso</h3>
+            <p style="text-align: justify;">>Maco Tours proporciona transporte especiales que llega a áreas remotas y de
+              difícil acceso en Colombia, asegurando que las comunidades tengan acceso a servicios de transporte
+              confiables y seguros donde más los necesitan.</p>
+          </div>
+        </div><!-- Features Item -->
+
+        <div class="row gy-4 align-items-center features-item" data-aos="fade-up">
+          <div class="col-md-5 order-1 order-md-2">
+            <img src="assets/img/features-2.jpg" class="img-fluid" alt="">
+          </div>
+          <div class="col-md-7 order-2 order-md-1">
+            <h3>Soluciones personalizadas</h3>
+            <p style="text-align: justify;">La empresa se compromete a comprender las necesidades individuales de cada
+              cliente y ofrecer soluciones de transporte adaptadas a sus requisitos específicos, garantizando una
+              experiencia de viaje única y satisfactoria para cada uno.</p>
+          </div>
+        </div><!-- Features Item -->
+
+        <div class="row gy-4 align-items-center features-item" data-aos="fade-up">
+          <div class="col-md-5">
+            <img src="assets/img/features-3.jpg" class="img-fluid" alt="">
+          </div>
+          <div class="col-md-7">
+            <h3>Seguridad y confiabilidad</h3>
+            <p style="text-align: justify;">Maco Tours garantiza la seguridad y la confiabilidad en cada viaje,
+              priorizando la seguridad de sus pasajeros y asegurando que lleguen a su destino de manera segura y
+              puntual.</p>
+          </div>
+        </div><!-- Features Item -->
+
+        <div class="row gy-4 align-items-center features-item" data-aos="fade-up">
+          <div class="col-md-5 order-1 order-md-2">
+            <img src="assets/img/features-4.jpg" class="img-fluid" alt="">
+          </div>
+          <div class="col-md-7 order-2 order-md-1">
+            <h3>Excelencia en el servicio</h3>
+            <p style="text-align: justify;">La empresa se esfuerza por ofrecer un servicio de calidad excepcional en
+              cada viaje, brindando una experiencia de transporte que supera las expectativas de los clientes y
+              garantiza su satisfacción en cada paso del camino.</p>
+          </div>
+        </div><!-- Features Item -->
+
       </div>
-      <div class="col-md-7">
-        <h3>Acceso a áreas de difícil acceso</h3>
-        <p>Maco Tours proporciona transporte especializado que llega a áreas remotas y de difícil acceso en Colombia, asegurando que las comunidades tengan acceso a servicios de transporte confiables y seguros donde más los necesitan.</p>
-      </div>
-    </div><!-- Features Item -->
 
-    <div class="row gy-4 align-items-center features-item" data-aos="fade-up">
-      <div class="col-md-5 order-1 order-md-2">
-        <img src="assets/img/features-2.jpg" class="img-fluid" alt="">
-      </div>
-      <div class="col-md-7 order-2 order-md-1">
-        <h3>Soluciones personalizadas</h3>
-        <p>La empresa se compromete a comprender las necesidades individuales de cada cliente y ofrecer soluciones de transporte adaptadas a sus requisitos específicos, garantizando una experiencia de viaje única y satisfactoria para cada uno.</p>
-      </div>
-    </div><!-- Features Item -->
-
-    <div class="row gy-4 align-items-center features-item" data-aos="fade-up">
-      <div class="col-md-5">
-        <img src="assets/img/features-3.jpg" class="img-fluid" alt="">
-      </div>
-      <div class="col-md-7">
-        <h3>Seguridad y confiabilidad</h3>
-        <p>Maco Tours garantiza la seguridad y la confiabilidad en cada viaje, priorizando la seguridad de sus pasajeros y asegurando que lleguen a su destino de manera segura y puntual.</p>
-      </div>
-    </div><!-- Features Item -->
-
-    <div class="row gy-4 align-items-center features-item" data-aos="fade-up">
-      <div class="col-md-5 order-1 order-md-2">
-        <img src="assets/img/features-4.jpg" class="img-fluid" alt="">
-      </div>
-      <div class="col-md-7 order-2 order-md-1">
-        <h3>Excelencia en el servicio</h3>
-        <p>La empresa se esfuerza por ofrecer un servicio de calidad excepcional en cada viaje, brindando una experiencia de transporte que supera las expectativas de los clientes y garantiza su satisfacción en cada paso del camino.</p>
-      </div>
-    </div><!-- Features Item -->
-
-  </div>
-
-</section><!-- End Features Section -->
+    </section><!-- End Features Section -->
 
 
 
@@ -371,7 +568,7 @@
                 </h3>
                 <div id="faq-content-1" class="accordion-collapse collapse" data-bs-parent="#faqlist">
                   <div class="accordion-body">
-                    La misión principal de Transportes Maco Tours es proporcionar servicios de transporte especializado
+                    La misión principal de Transportes Maco Tours es proporcionar servicios de transporte especiales
                     de alta calidad, adaptados a las necesidades únicas de nuestros clientes, garantizando eficiencia,
                     seguridad y compromiso con el medio ambiente..
                   </div>
@@ -383,13 +580,13 @@
                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                     data-bs-target="#faq-content-2">
                     <i class="bi bi-question-circle question-icon"></i>
-                    ¿Cuántos años de experiencia tiene la empresa en el transporte especializado?
+                    ¿Cuántos años de experiencia tiene la empresa en el transporte especiales?
                   </button>
                 </h3>
                 <div id="faq-content-2" class="accordion-collapse collapse" data-bs-parent="#faqlist">
                   <div class="accordion-body">
                     Con más de 25 años de experiencia en el sector, Transportes Maco Tours ha consolidado su posición
-                    como líder en el transporte especializado, brindando soluciones confiables y eficientes a lo largo
+                    como líder en el transporte especiales, brindando soluciones confiables y eficientes a lo largo
                     del tiempo.
                   </div>
                 </div>
@@ -416,13 +613,13 @@
                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                     data-bs-target="#faq-content-4">
                     <i class="bi bi-question-circle question-icon"></i>
-                    ¿Qué tipos de servicios de transporte especializado ofrece la empresa?
+                    ¿Qué tipos de servicios de transporte especiales ofrece la empresa?
                   </button>
                 </h3>
                 <div id="faq-content-4" class="accordion-collapse collapse" data-bs-parent="#faqlist">
                   <div class="accordion-body">
                     <i class="bi bi-question-circle question-icon"></i>
-                    Transportes Maco Tours ofrece una amplia gama de servicios, desde transporte público especializado
+                    Transportes Maco Tours ofrece una amplia gama de servicios, desde transporte público especiales
                     hasta soluciones logísticas personalizadas. Nos especializamos en adaptarnos a las necesidades
                     específicas de cada cliente.
                   </div>
@@ -498,7 +695,9 @@
             Calle 12 # 10 – 71 Barrio Gaira<br>
             <br>
             <strong>Telefono:</strong> (605) 429 - 9214<br>
-            <strong>Correo:</strong> maco.tours@hotmail.com<br>
+            <strong>Correo:</strong> maco.tours@hotmail.com</br> 
+  
+
           </p>
 
         </div>
@@ -541,7 +740,8 @@
 
     <div class="container mt-4">
       <div class="copyright">
-        &copy; Copyright <strong><span>Maco Tours</span></strong>. todos los derechos reservados
+        &copy; Copyright <strong><span>Maco Tours</span></strong>. todos los derechos reservados   <a href="politicas_Privacidad.html"> Política de Privacidad</a>
+        
       </div>
 
     </div>
@@ -562,9 +762,31 @@
   <script src="assets/vendor/aos/aos.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
 
+  <!-- Bootstrap CSS y JS (Cargar una sola vez) -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+  <script>
+    function toggleCollapse() {
+      var element = document.getElementById("collapseExample");
+      if (element.style.display === "none") {
+        element.style.display = "block";
+        $('.carousel').carousel('pause'); // Pausar el carrusel cuando se expande el contenido
+      } else {
+        element.style.display = "none";
+        $('.carousel').carousel('cycle'); // Reanudar el carrusel cuando se contrae el contenido
+      }
+    }
 
+    $(document).ready(function () {
+      $('.carousel').carousel({
+        interval: 10000 // Cambiar la imagen cada 10 segundos
+      });
+    });
+  </script>
 </body>
 
 </html>
