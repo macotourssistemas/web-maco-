@@ -1,0 +1,14 @@
+# Copie a .htaccess cuando trabaje en http://localhost/MacoTours/
+# (en producción use el .htaccess del repo con RewriteBase /)
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /MacoTours/
+
+  RewriteCond %{THE_REQUEST} \s/+MacoTours/([^/\s?]+)\.(html|php)[\s?] [NC]
+  RewriteCond %1 !^index$ [NC]
+  RewriteRule ^ /MacoTours/%1 [R=301,L,NE]
+
+  RewriteCond %{THE_REQUEST} \s/+MacoTours/index\.(html|php)[\s?] [NC]
+  RewriteRule ^ /MacoTours/ [R=301,L,NE]
+</IfModule>

@@ -44,9 +44,18 @@
       return SUPPORTED.includes(browser) ? browser : DEFAULT_LANG;
     },
 
+    localeUrl(code) {
+      const base =
+        window.MacoRoutes && typeof MacoRoutes.base === "function"
+          ? MacoRoutes.base()
+          : "";
+      const prefix = base.endsWith("/") ? base.slice(0, -1) : base;
+      return `${prefix}/assets/i18n/${code}.json`;
+    },
+
     async load(lang) {
       const code = SUPPORTED.includes(lang) ? lang : DEFAULT_LANG;
-      const response = await fetch(`assets/i18n/${code}.json`);
+      const response = await fetch(this.localeUrl(code));
       if (!response.ok) {
         throw new Error(`No se pudo cargar idioma: ${code}`);
       }
