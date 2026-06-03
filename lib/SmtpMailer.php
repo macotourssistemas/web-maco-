@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 final class SmtpMailer
 {
+    private string $smtpStep = 'inicio';
+
     public function __construct(
         private readonly string $host,
         private readonly int $port,
@@ -23,29 +25,29 @@ final class SmtpMailer
         $socket = $this->connect();
 
         try {
-            $this->expect($socket, 220);
+            $this->expect($socket, 220, 'banner inicial');
             $ehlo = $this->getHostname();
-            $this->dialog($socket, "EHLO $ehlo", 250);
+            $this->dialog($socket, "EHLO $ehlo", 250, 'EHLO');
 
             if ($this->encryption === 'tls' && $this->port !== 465) {
-                $this->dialog($socket, 'STARTTLS', 220);
+                $this->dialog($socket, 'STARTTLS', 220, 'STARTTLS');
                 if (!stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
-                    throw new RuntimeException('No se pudo establecer TLS con el servidor SMTP.');
+                    throw new RuntimeException('STARTTLS: no se pudo activar TLS con el servidor SMTP.');
                 }
-                $this->dialog($socket, "EHLO $ehlo", 250);
+                $this->dialog($socket, "EHLO $ehlo", 250, 'EHLO post-TLS');
             }
 
             $this->authenticate($socket);
             $from = $this->sanitizeEmail($fromEmail);
             $recipient = $this->sanitizeEmail($to);
 
-            $this->dialog($socket, "MAIL FROM:<$from>", 250);
-            $this->dialog($socket, "RCPT TO:<$recipient>", 250);
-            $this->dialog($socket, 'DATA', 354);
+            $this->dialog($socket, "MAIL FROM:<$from>", 250, 'MAIL FROM');
+            $this->dialog($socket, "RCPT TO:<$recipient>", 250, 'RCPT TO');
+            $this->dialog($socket, 'DATA', 354, 'DATA');
 
             $payload = $this->buildMessage($fromEmail, $fromName, $to, $subject, $textBody, $replyTo);
-            $this->dialog($socket, $payload, 250);
-            $this->dialog($socket, 'QUIT', 221);
+            $this->dialog($socket, $payload, 250, 'cuerpo del mensaje');
+            $this->dialog($socket, 'QUIT', 221, 'QUIT');
         } finally {
             fclose($socket);
         }
@@ -62,7 +64,14 @@ final class SmtpMailer
         $socket = @stream_socket_client($target, $errno, $errstr, 30, STREAM_CLIENT_CONNECT);
 
         if ($socket === false) {
-            throw new RuntimeException("No se pudo conectar al SMTP ($errno): $errstr");
+            throw new RuntimeException(sprintf(
+                'conexión TCP a %s:%d (%s): falló (errno %d) %s',
+                $this->host,
+                $this->port,
+                $this->encryption === 'ssl' ? 'ssl' : 'tcp',
+                $errno,
+                $errstr !== '' ? $errstr : 'sin mensaje del sistema',
+            ));
         }
 
         stream_set_timeout($socket, 30);
@@ -71,25 +80,49 @@ final class SmtpMailer
 
     private function authenticate($socket): void
     {
-        $this->dialog($socket, 'AUTH LOGIN', 334);
-        $this->dialog($socket, base64_encode($this->username), 334);
-        $this->dialog($socket, base64_encode($this->password), 235);
+        $this->dialog($socket, 'AUTH LOGIN', 334, 'AUTH LOGIN');
+        $this->dialog($socket, base64_encode($this->username), 334, 'AUTH usuario');
+        $this->dialog($socket, base64_encode($this->password), 235, 'AUTH contraseña');
     }
 
-    private function dialog($socket, string $command, int $expectedCode): void
+    private function dialog($socket, string $command, int $expectedCode, string $step): void
     {
+        $this->smtpStep = $step;
         fwrite($socket, $command . "\r\n");
-        $this->expect($socket, $expectedCode);
+        $this->expect($socket, $expectedCode, $step);
     }
 
-    private function expect($socket, int $expectedCode): void
+    private function expect($socket, int $expectedCode, string $step): void
     {
+        $this->smtpStep = $step;
         $response = $this->readResponse($socket);
+        $meta = stream_get_meta_data($socket);
         $code = (int) substr($response, 0, 3);
 
         if ($code !== $expectedCode) {
-            throw new RuntimeException('SMTP: ' . trim(preg_replace('/\s+/', ' ', $response)));
+            throw new RuntimeException($this->formatSmtpError($expectedCode, $code, $response, $meta));
         }
+    }
+
+    /** @param array<string, mixed> $meta */
+    private function formatSmtpError(int $expectedCode, int $code, string $response, array $meta): string
+    {
+        $text = trim(preg_replace('/\s+/', ' ', $response) ?? '');
+        if ($text === '') {
+            $text = !empty($meta['timed_out'])
+                ? 'sin respuesta (timeout)'
+                : 'sin respuesta del servidor';
+        }
+
+        $got = $code > 0 ? (string) $code : 'código no legible';
+
+        return sprintf(
+            'paso "%s": esperado %d, recibido %s — %s',
+            $this->smtpStep,
+            $expectedCode,
+            $got,
+            $text,
+        );
     }
 
     private function readResponse($socket): string
@@ -101,7 +134,13 @@ final class SmtpMailer
                 break;
             }
         }
+
         return $response;
+    }
+
+    public function getLastStep(): string
+    {
+        return $this->smtpStep;
     }
 
     private function buildMessage(

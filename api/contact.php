@@ -106,6 +106,41 @@ try {
 
     echo json_encode(['ok' => true], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
-    errorlog('error', 'contact send_failed', ['detail' => $e->getMessage()]);
+    $debug = filter_var(env('APP_DEBUG', 'false'), FILTER_VALIDATE_BOOLEAN);
+    $context = [
+        'detail' => $e->getMessage(),
+        'exception' => $e::class,
+        'file' => $e->getFile() . ':' . $e->getLine(),
+    ];
+    if (isset($mailer) && $mailer instanceof SmtpMailer) {
+        $context['smtp_step'] = $mailer->getLastStep();
+    }
+    if ($debug) {
+        $context['smtp'] = [
+            'host' => $host,
+            'port' => $port,
+            'encryption' => $encryption,
+            'user' => $user,
+            'mail_to' => $mailTo,
+            'mail_from' => $mailFrom,
+        ];
+        $context['trace'] = $e->getTraceAsString();
+    }
+    errorlog($debug ? 'debug' : 'error', 'contact send_failed', $context);
+
+    if ($debug) {
+        http_response_code(500);
+        echo json_encode([
+            'ok' => false,
+            'error' => 'send_failed',
+            'debug' => [
+                'message' => $e->getMessage(),
+                'smtp_step' => $context['smtp_step'] ?? null,
+                'smtp' => $context['smtp'] ?? null,
+            ],
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     api_json_error(true, 'send_failed', 500);
 }
