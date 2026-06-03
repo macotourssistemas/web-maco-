@@ -55,6 +55,26 @@ $mailFrom = env('MAIL_FROM', $user);
 $mailFromName = env('MAIL_FROM_NAME', 'Maco Tours - Formulario web');
 
 if (!$host || !$user || $pass === null || $pass === '' || !$mailTo || !$mailFrom) {
+    $missing = [];
+    if (!$host) {
+        $missing[] = 'SMTP_HOST';
+    }
+    if (!$user) {
+        $missing[] = 'SMTP_USER';
+    }
+    if ($pass === null || $pass === '') {
+        $missing[] = 'SMTP_PASS';
+    }
+    if (!$mailTo) {
+        $missing[] = 'MAIL_TO';
+    }
+    if (!$mailFrom) {
+        $missing[] = 'MAIL_FROM';
+    }
+    errorlog('error', 'contact server_not_configured', [
+        'missing' => $missing,
+        'env_readable' => is_readable($root . '/.env'),
+    ]);
     api_json_error(true, 'server_not_configured', 503);
 }
 
@@ -86,6 +106,6 @@ try {
 
     echo json_encode(['ok' => true], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
-    error_log('contact.php: ' . $e->getMessage());
+    errorlog('error', 'contact send_failed', ['detail' => $e->getMessage()]);
     api_json_error(true, 'send_failed', 500);
 }

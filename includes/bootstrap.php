@@ -5,6 +5,9 @@ if (!defined('MACO_ROOT')) {
     define('MACO_ROOT', dirname(__DIR__));
 }
 
+require_once MACO_ROOT . '/config/errorlog.php';
+errorlog_init();
+
 /** @var array<string, mixed> $macoPage */
 $macoPage = [
     'current_slug' => '',

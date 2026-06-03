@@ -14,6 +14,7 @@
   RewriteRule ^includes/ - [F,L]
   RewriteRule ^config/ - [F,L]
   RewriteRule ^lib/ - [F,L]
+  RewriteRule ^var/ - [F,L]
 </IfModule>
 
 <IfModule mod_rewrite.c>
