@@ -29,7 +29,8 @@
   RewriteCond %{THE_REQUEST} \s/+index\.(html|php)[\s?] [NC]
   RewriteRule ^ / [R=301,L,NE]
 
-  # Archivos estáticos reales
+  # Archivos estáticos (traducciones vía api/i18n/{lang}.php, no .json público)
+  RewriteCond %{REQUEST_URI} \.(css|js|png|jpe?g|gif|webp|svg|ico|woff2?|ttf|eot|pdf|mp4|webm)$ [NC,OR]
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 

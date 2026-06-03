@@ -1,0 +1,8 @@
+# Los .json no se sirven por HTTP (ver api/i18n.php y FilesMatch del vhost).
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Order deny,allow
+  Deny from all
+</IfModule>

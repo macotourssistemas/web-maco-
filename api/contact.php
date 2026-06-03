@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-header('Content-Type: application/json; charset=utf-8');
+require __DIR__ . '/_http.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['ok' => false, 'error' => 'method_not_allowed']);
-    exit;
-}
+api_require_method(['POST']);
+api_reject_query_string();
+api_security_headers(false);
+
+header('Content-Type: application/json; charset=utf-8');
 
 $root = dirname(__DIR__);
 require $root . '/config/load-env.php';
@@ -15,22 +15,17 @@ require $root . '/lib/SmtpMailer.php';
 
 loadEnv($root . '/.env');
 
-$debug = strtolower(env('APP_DEBUG', 'false') ?? 'false') === 'true';
+$allowedFields = ['name', 'email', 'message', 'website'];
 
-function jsonError(string $code, int $status = 400, bool $debug = false, ?string $detail = null): void
-{
-    http_response_code($status);
-    $payload = ['ok' => false, 'error' => $code];
-    if ($debug && $detail) {
-        $payload['detail'] = $detail;
+foreach (array_keys($_POST) as $key) {
+    if (!in_array($key, $allowedFields, true)) {
+        api_json_error(true, 'invalid_request', 400);
     }
-    echo json_encode($payload, JSON_UNESCAPED_UNICODE);
-    exit;
 }
 
 // Campo trampa (bots)
 if (!empty($_POST['website'] ?? '')) {
-    echo json_encode(['ok' => true]);
+    echo json_encode(['ok' => true], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -39,15 +34,15 @@ $email = trim((string) ($_POST['email'] ?? ''));
 $message = trim((string) ($_POST['message'] ?? ''));
 
 if ($name === '' || $email === '' || $message === '') {
-    jsonError('missing_fields');
+    api_json_error(true, 'missing_fields', 400);
 }
 
 if (mb_strlen($name) > 120 || mb_strlen($email) > 254 || mb_strlen($message) > 8000) {
-    jsonError('invalid_fields');
+    api_json_error(true, 'invalid_fields', 400);
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    jsonError('invalid_email');
+    api_json_error(true, 'invalid_email', 400);
 }
 
 $host = env('SMTP_HOST');
@@ -60,7 +55,7 @@ $mailFrom = env('MAIL_FROM', $user);
 $mailFromName = env('MAIL_FROM_NAME', 'Maco Tours - Formulario web');
 
 if (!$host || !$user || $pass === null || $pass === '' || !$mailTo || !$mailFrom) {
-    jsonError('server_not_configured', 503, $debug, 'Revise el archivo .env (SMTP_* y MAIL_*).');
+    api_json_error(true, 'server_not_configured', 503);
 }
 
 try {
@@ -91,5 +86,6 @@ try {
 
     echo json_encode(['ok' => true], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
-    jsonError('send_failed', 500, $debug, $e->getMessage());
+    error_log('contact.php: ' . $e->getMessage());
+    api_json_error(true, 'send_failed', 500);
 }

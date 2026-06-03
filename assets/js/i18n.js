@@ -50,7 +50,7 @@
           ? MacoRoutes.base()
           : "";
       const prefix = base.endsWith("/") ? base.slice(0, -1) : base;
-      return `${prefix}/assets/i18n/${code}.json`;
+      return `${prefix}/api/i18n/${code}.php`;
     },
 
     async load(lang) {

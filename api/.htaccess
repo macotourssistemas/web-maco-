@@ -1,0 +1,8 @@
+Options -Indexes
+
+# contact.php admite solo POST (ver script)
+<Files "contact.php">
+  <LimitExcept POST>
+    Require all denied
+  </LimitExcept>
+</Files>

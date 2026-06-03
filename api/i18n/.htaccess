@@ -1,0 +1,8 @@
+# Solo lectura (sin POST/PUT/PATCH/DELETE)
+<LimitExcept GET HEAD>
+  Require all denied
+</LimitExcept>
+
+<Files "bootstrap.php">
+  Require all denied
+</Files>
