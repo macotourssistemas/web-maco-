@@ -7,6 +7,15 @@
   const form = document.getElementById("contact-form");
   if (!form) return;
 
+  function apiUrl(path) {
+    const base =
+      window.MacoRoutes && typeof MacoRoutes.base === "function"
+        ? MacoRoutes.base()
+        : "";
+    const prefix = base.endsWith("/") ? base.slice(0, -1) : base;
+    return `${prefix}/${path.replace(/^\//, "")}`;
+  }
+
   const statusEl = document.getElementById("contact-form-status");
   const submitBtn = form.querySelector('button[type="submit"]');
 
@@ -23,12 +32,12 @@
     statusEl.classList.remove("hidden");
     statusEl.hidden = false;
     statusEl.className =
-      "mb-4 rounded-lg px-4 py-3 text-sm " +
+      "contact-form__status " +
       (type === "success"
-        ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+        ? "bg-emerald-50 text-emerald-800 border-emerald-200"
         : type === "error"
-          ? "bg-red-50 text-red-800 border border-red-200"
-          : "bg-slate-50 text-slate-700 border border-slate-200");
+          ? "bg-red-50 text-red-800 border-red-200"
+          : "bg-slate-50 text-slate-700 border-slate-200");
     statusEl.textContent = text;
   }
 
@@ -47,7 +56,7 @@
     const body = new FormData(form);
 
     try {
-      const response = await fetch("api/contact.php", {
+      const response = await fetch(apiUrl("api/contact.php"), {
         method: "POST",
         body,
         headers: { Accept: "application/json" },
