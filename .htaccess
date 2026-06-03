@@ -1,0 +1,46 @@
+# No exponer credenciales
+<Files ".env">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</Files>
+
+# Bloquear carpetas solo para includes (no URLs públicas)
+<IfModule mod_rewrite.c>
+  RewriteRule ^includes/ - [F,L]
+  RewriteRule ^config/ - [F,L]
+  RewriteRule ^lib/ - [F,L]
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /MacoTours/
+
+  # Redirigir URLs con .html o .php visibles → ruta limpia
+  RewriteCond %{THE_REQUEST} \s/+MacoTours/([^/\s?]+)\.(html|php)[\s?] [NC]
+  RewriteCond %1 !^index$ [NC]
+  RewriteRule ^ /MacoTours/%1 [R=301,L,NE]
+
+  RewriteCond %{THE_REQUEST} \s/+MacoTours/index\.(html|php)[\s?] [NC]
+  RewriteRule ^ /MacoTours/ [R=301,L,NE]
+
+  # Archivos estáticos reales
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Inicio
+  RewriteRule ^$ index.php [L]
+
+  # /pagina → pagina.php
+  RewriteCond %{REQUEST_FILENAME}.php -f
+  RewriteRule ^([^./]+)/?$ $1.php [L]
+</IfModule>
+
+DirectoryIndex index.php index.html
