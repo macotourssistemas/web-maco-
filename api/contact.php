@@ -27,6 +27,18 @@ $name = trim((string) ($_POST['name'] ?? ''));
 $email = trim((string) ($_POST['email'] ?? ''));
 $message = trim((string) ($_POST['message'] ?? ''));
 
+$reasons = [
+    'general' => 'Información general',
+    'cotizar' => 'Cotización de servicio',
+    'empresarial' => 'Servicio empresarial',
+    'escolar' => 'Servicio escolar',
+    'turistico' => 'Servicio turístico',
+    'conductor' => 'Quiero ser conductor',
+    'pqr' => 'Peticiones, quejas o reclamos',
+];
+$reasonKey = (string) ($_POST['reason'] ?? 'general');
+$reasonLabel = $reasons[$reasonKey] ?? $reasons['general'];
+
 if ($name === '' || $email === '' || $message === '') {
     api_json_error(true, 'missing_fields', 400);
 }
@@ -75,10 +87,11 @@ if (!$host || !$user || $pass === null || $pass === '' || !$mailTo || !$mailFrom
 try {
     $mailer = new SmtpMailer($host, $port, $user, $pass, $encryption);
 
-    $subject = 'Contacto web - ' . $name;
+    $subject = 'Contacto web - ' . $reasonLabel . ' - ' . $name;
     $body = implode("\n", [
         'Nuevo mensaje desde el formulario de contacto',
         '-------------------------------------------',
+        'Motivo: ' . $reasonLabel,
         'Nombre: ' . $name,
         'Correo: ' . $email,
         '',

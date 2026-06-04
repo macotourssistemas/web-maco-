@@ -55,6 +55,18 @@ require __DIR__ . '/includes/layout-start.php';
           <div class="col-lg-8">
               <form id="contact-form" class="contact-form" action="api/contact.php" method="post" novalidate>
                 <div id="contact-form-status" class="contact-form__status hidden" role="status" aria-live="polite"></div>
+                <label class="contact-form__label contact-form__label--full">
+                  <span class="sr-only" data-i18n="pages.contacto.reasonLabel">Motivo de contacto</span>
+                  <select name="reason" class="contact-form__input contact-form__select" data-i18n-aria="pages.contacto.reasonLabel" required>
+                    <option value="general" data-i18n="pages.contacto.reasonGeneral">Información general</option>
+                    <option value="cotizar" data-i18n="pages.contacto.reasonQuote">Quiero cotizar un servicio</option>
+                    <option value="empresarial" data-i18n="pages.contacto.reasonCorporate">Servicio empresarial</option>
+                    <option value="escolar" data-i18n="pages.contacto.reasonSchool">Servicio escolar</option>
+                    <option value="turistico" data-i18n="pages.contacto.reasonTourism">Servicio turístico</option>
+                    <option value="conductor" data-i18n="pages.contacto.reasonDriver">Quiero ser conductor</option>
+                    <option value="pqr" data-i18n="pages.contacto.reasonPqr">Peticiones, quejas o reclamos</option>
+                  </select>
+                </label>
                 <div class="contact-form__fields">
                   <label class="contact-form__label">
                     <span class="sr-only" data-i18n="pages.contacto.namePlaceholder">Nombre completo</span>

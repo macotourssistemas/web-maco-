@@ -14,7 +14,12 @@
   <link href="<?= maco_h('assets/vendor/glightbox/css/glightbox.min.css') ?>" rel="stylesheet">
   <link href="<?= maco_h('assets/vendor/swiper/swiper-bundle.min.css') ?>" rel="stylesheet">
   <link href="<?= maco_h('assets/vendor/aos/aos.css') ?>" rel="stylesheet">
-  <link href="<?= maco_h('assets/css/main.css') ?>" rel="stylesheet">
-  <link href="<?= maco_h('assets/css/tailwind.css') ?>" rel="stylesheet">
-  <script src="<?= maco_h('assets/js/routes.js') ?>"></script>
+<?php
+  foreach (['assets/css/main.css', 'assets/css/tailwind.css'] as $cssFile):
+      $cssVer = is_file(MACO_ROOT . '/' . $cssFile) ? '?v=' . filemtime(MACO_ROOT . '/' . $cssFile) : '';
+  ?>
+  <link href="<?= maco_h($cssFile . $cssVer) ?>" rel="stylesheet">
+<?php endforeach; ?>
+<?php $routesVer = is_file(MACO_ROOT . '/assets/js/routes.js') ? '?v=' . filemtime(MACO_ROOT . '/assets/js/routes.js') : ''; ?>
+  <script src="<?= maco_h('assets/js/routes.js' . $routesVer) ?>"></script>
 </head>
