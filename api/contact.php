@@ -4,7 +4,6 @@ declare(strict_types=1);
 require __DIR__ . '/_http.php';
 
 api_require_method(['POST']);
-api_reject_query_string();
 api_security_headers(false);
 
 header('Content-Type: application/json; charset=utf-8');
@@ -15,13 +14,8 @@ require $root . '/lib/SmtpMailer.php';
 
 loadEnv($root . '/.env');
 
-$allowedFields = ['name', 'email', 'message', 'website'];
-
-foreach (array_keys($_POST) as $key) {
-    if (!in_array($key, $allowedFields, true)) {
-        api_json_error(true, 'invalid_request', 400);
-    }
-}
+// Solo se procesan estos campos; cualquier extra (Cloudflare, extensiones,
+// utm_*, etc.) se ignora en lugar de rechazar la petición.
 
 // Campo trampa (bots)
 if (!empty($_POST['website'] ?? '')) {
