@@ -4,8 +4,18 @@
 (function () {
   "use strict";
 
+  const TAG = "[contacto]";
+  console.info(TAG, "script cargado");
+
   const form = document.getElementById("contact-form");
-  if (!form) return;
+  if (!form) {
+    console.error(
+      TAG,
+      "NO se encontró #contact-form en la página: el envío no se activará."
+    );
+    return;
+  }
+  console.info(TAG, "formulario detectado, listener activo");
 
   function apiUrl(path) {
     const base =
@@ -89,6 +99,7 @@
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
+    console.info(TAG, "submit interceptado");
 
     if (submitBtn) {
       submitBtn.disabled = true;
@@ -100,23 +111,40 @@
     );
 
     const body = new FormData(form);
+    const enviado = {};
+    body.forEach(function (value, key) {
+      enviado[key] = typeof value === "string" ? value : "[archivo]";
+    });
+    const url = apiUrl("api/contact.php");
+    console.info(TAG, "POST a:", url, "campos:", enviado);
 
     try {
-      const response = await fetch(apiUrl("api/contact.php"), {
+      const response = await fetch(url, {
         method: "POST",
         body,
         headers: { Accept: "application/json" },
       });
 
       const raw = await response.text();
+      console.info(
+        TAG,
+        "respuesta HTTP",
+        response.status,
+        response.statusText,
+        "| cuerpo:",
+        raw
+      );
+
       let data = {};
       try {
         data = JSON.parse(raw);
       } catch (_e) {
         data = {};
+        console.warn(TAG, "la respuesta NO es JSON (¿Cloudflare/Apache?)");
       }
 
       if (response.ok && data.ok) {
+        console.info(TAG, "envío correcto");
         form.reset();
         setStatus(
           "success",
@@ -128,6 +156,7 @@
         return;
       }
 
+      console.error(TAG, "envío fallido:", data.error || "(sin código)");
       setStatus(
         "error",
         msg(
@@ -137,6 +166,7 @@
         buildDebug(response.status, response.statusText, raw, data)
       );
     } catch (err) {
+      console.error(TAG, "excepción durante el envío:", err);
       setStatus(
         "error",
         msg(

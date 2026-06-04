@@ -21,6 +21,12 @@ $tail = [
     'assets/js/cookie-consent.js',
 ];
 
-foreach (array_merge($core, $extra, $tail) as $src): ?>
-<script src="<?= maco_h($src) ?>"></script>
+foreach (array_merge($core, $extra, $tail) as $src):
+    $version = '';
+    $file = MACO_ROOT . '/' . ltrim($src, '/');
+    if (is_file($file)) {
+        $version = '?v=' . filemtime($file);
+    }
+    ?>
+<script src="<?= maco_h($src . $version) ?>"></script>
 <?php endforeach; ?>
