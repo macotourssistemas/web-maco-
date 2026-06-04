@@ -21,6 +21,7 @@ final class SmtpMailer
         string $fromEmail,
         string $fromName,
         ?string $replyTo = null,
+        ?string $htmlBody = null,
     ): void {
         $socket = $this->connect();
 
@@ -45,7 +46,7 @@ final class SmtpMailer
             $this->dialog($socket, "RCPT TO:<$recipient>", 250, 'RCPT TO');
             $this->dialog($socket, 'DATA', 354, 'DATA');
 
-            $payload = $this->buildMessage($fromEmail, $fromName, $to, $subject, $textBody, $replyTo);
+            $payload = $this->buildMessage($fromEmail, $fromName, $to, $subject, $textBody, $replyTo, $htmlBody);
             $this->dialog($socket, $payload, 250, 'cuerpo del mensaje');
             $this->dialog($socket, 'QUIT', 221, 'QUIT');
         } finally {
@@ -150,6 +151,7 @@ final class SmtpMailer
         string $subject,
         string $textBody,
         ?string $replyTo,
+        ?string $htmlBody = null,
     ): string {
         $fromHeader = $this->formatAddress($fromEmail, $fromName);
         $toHeader = $this->formatAddress($to, $to);
@@ -162,15 +164,36 @@ final class SmtpMailer
             "To: $toHeader",
             "Subject: $encodedSubject",
             'MIME-Version: 1.0',
-            'Content-Type: text/plain; charset=UTF-8',
-            'Content-Transfer-Encoding: 8bit',
         ];
 
         if ($replyTo) {
             $headers[] = 'Reply-To: ' . $this->sanitizeEmail($replyTo);
         }
 
-        $body = $this->dotStuff($textBody);
+        if ($htmlBody !== null && $htmlBody !== '') {
+            $boundary = 'maco_' . bin2hex(random_bytes(12));
+            $headers[] = "Content-Type: multipart/alternative; boundary=\"$boundary\"";
+
+            $parts = [
+                "--$boundary",
+                'Content-Type: text/plain; charset=UTF-8',
+                'Content-Transfer-Encoding: 8bit',
+                '',
+                $textBody,
+                "--$boundary",
+                'Content-Type: text/html; charset=UTF-8',
+                'Content-Transfer-Encoding: 8bit',
+                '',
+                $htmlBody,
+                "--$boundary--",
+            ];
+            $body = $this->dotStuff(implode("\r\n", $parts));
+        } else {
+            $headers[] = 'Content-Type: text/plain; charset=UTF-8';
+            $headers[] = 'Content-Transfer-Encoding: 8bit';
+            $body = $this->dotStuff($textBody);
+        }
+
         return implode("\r\n", $headers) . "\r\n\r\n" . $body . "\r\n.";
     }
 

@@ -1019,6 +1019,14 @@
     @apply min-h-[200px] resize-y;
   }
 
+  .contact-form__input--error {
+    @apply border-red-400 focus:border-red-500 focus:ring-red-500/30;
+  }
+
+  .contact-form__error {
+    @apply mt-1.5 block text-sm font-medium text-red-600;
+  }
+
   .contact-form__submit {
     @apply w-full sm:w-auto;
   }

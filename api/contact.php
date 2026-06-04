@@ -10,16 +10,52 @@ header('Content-Type: application/json; charset=utf-8');
 
 $root = dirname(__DIR__);
 require $root . '/config/load-env.php';
+require $root . '/config/rate-limit.php';
 require $root . '/lib/SmtpMailer.php';
+require $root . '/lib/mail_templates.php';
 
 loadEnv($root . '/.env');
+
+$clientIp = (string) ($_SERVER['HTTP_CF_CONNECTING_IP'] ?? $_SERVER['REMOTE_ADDR'] ?? '');
+
+/**
+ * Error JSON con detalle de campos para la UI.
+ * @param list<string> $fields
+ */
+function contact_field_error(string $code, array $fields, int $status = 400): never
+{
+    http_response_code($status);
+    header('Content-Type: application/json; charset=UTF-8');
+    echo json_encode(['ok' => false, 'error' => $code, 'fields' => $fields], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 // Solo se procesan estos campos; cualquier extra (Cloudflare, extensiones,
 // utm_*, etc.) se ignora en lugar de rechazar la petición.
 
-// Campo trampa (bots)
+// Campo trampa (bots): respondemos OK sin enviar nada.
 if (!empty($_POST['website'] ?? '')) {
+    errorlog('warning', 'contact honeypot', ['ip' => $clientIp]);
     echo json_encode(['ok' => true], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+// Política anti-abuso: límite por IP (5/hora y 20s entre envíos).
+$rate = maco_rate_limit($clientIp);
+if (!$rate['allowed']) {
+    errorlog('warning', 'contact rate_limited', [
+        'ip' => $clientIp,
+        'reason' => $rate['reason'],
+        'retry_after' => $rate['retry_after'],
+    ]);
+    http_response_code(429);
+    header('Retry-After: ' . max(1, $rate['retry_after']));
+    echo json_encode([
+        'ok' => false,
+        'error' => 'rate_limited',
+        'reason' => $rate['reason'],
+        'retry_after' => $rate['retry_after'],
+    ], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -39,16 +75,36 @@ $reasons = [
 $reasonKey = (string) ($_POST['reason'] ?? 'general');
 $reasonLabel = $reasons[$reasonKey] ?? $reasons['general'];
 
-if ($name === '' || $email === '' || $message === '') {
-    api_json_error(true, 'missing_fields', 400);
+$missing = [];
+if ($name === '') {
+    $missing[] = 'name';
+}
+if ($email === '') {
+    $missing[] = 'email';
+}
+if ($message === '') {
+    $missing[] = 'message';
+}
+if ($missing !== []) {
+    contact_field_error('missing_fields', $missing);
 }
 
-if (mb_strlen($name) > 120 || mb_strlen($email) > 254 || mb_strlen($message) > 8000) {
-    api_json_error(true, 'invalid_fields', 400);
+$tooLong = [];
+if (mb_strlen($name) > 120) {
+    $tooLong[] = 'name';
+}
+if (mb_strlen($email) > 254) {
+    $tooLong[] = 'email';
+}
+if (mb_strlen($message) > 8000) {
+    $tooLong[] = 'message';
+}
+if ($tooLong !== []) {
+    contact_field_error('invalid_fields', $tooLong);
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    api_json_error(true, 'invalid_email', 400);
+    contact_field_error('invalid_email', ['email']);
 }
 
 $host = env('SMTP_HOST');
@@ -87,6 +143,7 @@ if (!$host || !$user || $pass === null || $pass === '' || !$mailTo || !$mailFrom
 try {
     $mailer = new SmtpMailer($host, $port, $user, $pass, $encryption);
 
+    // 1) Aviso interno a la empresa
     $subject = 'Contacto web - ' . $reasonLabel . ' - ' . $name;
     $body = implode("\n", [
         'Nuevo mensaje desde el formulario de contacto',
@@ -99,8 +156,9 @@ try {
         $message,
         '',
         'Enviado: ' . gmdate('Y-m-d H:i:s') . ' UTC',
-        'IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'desconocida'),
+        'IP: ' . $clientIp,
     ]);
+    $bodyHtml = maco_mail_admin_html($reasonLabel, $name, $email, $message, $clientIp !== '' ? $clientIp : 'desconocida');
 
     $mailer->send(
         $mailTo,
@@ -109,7 +167,41 @@ try {
         $mailFrom,
         $mailFromName,
         $email,
+        $bodyHtml,
     );
+
+    // 2) Confirmación al usuario (no debe romper la respuesta si falla)
+    try {
+        $confirmSubject = 'Recibimos tu solicitud - Maco Tours';
+        $confirmText = implode("\n", [
+            'Hola ' . $name . ',',
+            '',
+            'Hemos recibido tu solicitud y te responderemos lo antes posible.',
+            'Motivo: ' . $reasonLabel,
+            '',
+            'Tu mensaje:',
+            $message,
+            '',
+            'Maco Tours S.A.S. - Transportes Especiales',
+            'contacto@transportesmacotours.com - (605) 429 - 9214',
+        ]);
+        $confirmHtml = maco_mail_confirmation_html($reasonLabel, $name, $message);
+
+        $mailer->send(
+            $email,
+            $confirmSubject,
+            $confirmText,
+            $mailFrom,
+            'Maco Tours',
+            $mailTo,
+            $confirmHtml,
+        );
+    } catch (Throwable $confirmError) {
+        errorlog('warning', 'contact confirmation_failed', [
+            'detail' => $confirmError->getMessage(),
+            'to' => $email,
+        ]);
+    }
 
     echo json_encode(['ok' => true], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
