@@ -170,39 +170,12 @@ try {
         $bodyHtml,
     );
 
-    // 2) Confirmación al usuario (no debe romper la respuesta si falla)
-    try {
-        $confirmSubject = 'Recibimos tu solicitud - Maco Tours';
-        $confirmText = implode("\n", [
-            'Hola ' . $name . ',',
-            '',
-            'Hemos recibido tu solicitud y te responderemos lo antes posible.',
-            'Motivo: ' . $reasonLabel,
-            '',
-            'Tu mensaje:',
-            $message,
-            '',
-            'Maco Tours S.A.S. - Transportes Especiales',
-            'contacto@transportesmacotours.com - (605) 429 - 9214',
-        ]);
-        $confirmHtml = maco_mail_confirmation_html($reasonLabel, $name, $message);
-
-        $mailer->send(
-            $email,
-            $confirmSubject,
-            $confirmText,
-            $mailFrom,
-            'Maco Tours',
-            $mailTo,
-            $confirmHtml,
-        );
-    } catch (Throwable $confirmError) {
-        errorlog('warning', 'contact confirmation_failed', [
-            'detail' => $confirmError->getMessage(),
-            'to' => $email,
-        ]);
-    }
-
+    // Seguridad (incidente MXroute, 2026-07): NO se envía correo de confirmación
+    // a la dirección proporcionada por el visitante. Ese flujo permitía que un
+    // tercero pusiera el correo de otra persona y que el servidor SMTP enviara
+    // mensajes a destinatarios no autorizados (abuso de relay / spam con nuestra
+    // reputación). El formulario ahora solo notifica al destinatario interno (MAIL_TO);
+    // los datos del visitante se usan únicamente dentro de ese mensaje interno.
     echo json_encode(['ok' => true], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $e) {
     $debug = filter_var(env('APP_DEBUG', 'false'), FILTER_VALIDATE_BOOLEAN);
